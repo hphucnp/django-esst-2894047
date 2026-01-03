@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -124,3 +125,7 @@ STATIC_URL = "static/"
 STATICFILES_DIRS = [
     BASE_DIR / 'static',
 ]
+
+IS_CODESPACES = os.environ.get("CODESPACES") == 'true'
+if IS_CODESPACES:
+    CSRF_TRUSTED_ORIGINS = ["https://localhost:8000"]
