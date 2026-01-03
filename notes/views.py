@@ -1,14 +1,21 @@
-from django.http import Http404
-from django.shortcuts import render
+from django.http import Http404, HttpResponse, HttpResponseRedirect
+from django.db.models import F
+from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse
 from django.views.generic import (
     CreateView, ListView, DetailView,
     UpdateView
 )
+from django.views.generic.edit import DeleteView
 
 from .forms import NoteForm
 
 # Create your views here.
 from .models import Note
+
+class NoteDeleteView(DeleteView):
+    model = Note
+    success_url = '/smart/notes'
 
 class NoteUpdateView(UpdateView):
     model = Note
@@ -35,4 +42,11 @@ class NoteDetailView(DetailView):
     model = Note
     context_object_name = "note"
     template_name = "notes/note_detail.html"
+
+def like(request, pk: int):
+    # note = get_object_or_404(Note, pk=pk)
+    if request.method == 'POST':
+        Note.objects.filter(pk=pk).update(likes=F('likes') + 1)
+        return HttpResponseRedirect(reverse('note.detail', args=(pk,)))
+    raise Http404
 

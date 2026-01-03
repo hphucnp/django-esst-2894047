@@ -4,7 +4,15 @@
 <div class="border round">
     <h1 class="my-5">{{note.title}}</h1>
     <p>{{note.text}}</p>
+    <p>Likes: {{note.likes}}</p>
 </div>
 <a href="{% url 'note.list' %}" class="btn btn-secondary my-5">Back</a>
 <a href="{% url 'note.update' pk=note.id %}" class="btn btn-secondary">Edit</a>
+<a href="{% url 'note.delete' pk=note.id %}" class="btn btn-secondary">Delete</a>
+<!-- <a href="{% url 'note.like' pk=note.id %}" class="btn btn-secondary">Like</a> -->
+ <form method="post" class="d-inline" action="{% url 'note.like' pk=note.id %}">
+    {% csrf_token %}
+    {{ form.as_p}}
+    <button class="btn btn-secondary my-5">Upvote</button>
+ </form>
 {% endblock %}
