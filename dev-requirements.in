@@ -1,0 +1,16 @@
+# Development dependencies
+-r requirements.in
+
+# Development tools
+pip-tools
+
+# Django development tools
+django-extensions
+
+# Testing
+pytest
+pytest-django
+pytest-cov
+
+# Code quality
+ruff

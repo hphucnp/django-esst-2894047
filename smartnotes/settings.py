@@ -38,10 +38,11 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-
+    # Third-party apps
+    "django_extensions",
     # apps
     "home",
-    "notes"
+    "notes",
 ]
 
 MIDDLEWARE = [
@@ -59,9 +60,7 @@ ROOT_URLCONF = "smartnotes.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [
-            BASE_DIR / 'static/templates'
-        ],
+        "DIRS": [BASE_DIR / "static/templates"],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -123,9 +122,9 @@ USE_TZ = True
 
 STATIC_URL = "static/"
 STATICFILES_DIRS = [
-    BASE_DIR / 'static',
+    BASE_DIR / "static",
 ]
 
-IS_CODESPACES = os.environ.get("CODESPACES") == 'true'
+IS_CODESPACES = os.environ.get("CODESPACES") == "true"
 if IS_CODESPACES:
     CSRF_TRUSTED_ORIGINS = ["https://localhost:8000"]

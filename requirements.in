@@ -1,0 +1,23 @@
+# Core production dependencies
+Django==6.0
+
+# Jupyter and data science
+jupyterlab==4.5.0
+ipykernel==7.1.0
+nbdime==4.0.2
+
+# Git integration
+GitPython==3.1.45
+jupyterlab_git==0.51.2
+
+# HTTP requests
+requests==2.32.5
+
+# Password hashing
+argon2-cffi==25.1.0
+
+# Beautiful Soup for HTML parsing
+beautifulsoup4==4.14.2
+
+# YAML parsing
+PyYAML==6.0.3
