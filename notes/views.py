@@ -28,7 +28,7 @@ class NoteCreateView(LoginRequiredMixin, CreateView):
     model = Note
     success_url = "/smart/notes"
     form_class = NoteForm
-    login_url = "/admin"
+    login_url = "/login"
 
     def form_valid(self, form):
         self.object = form.save(commit=False)
@@ -41,7 +41,7 @@ class NoteListView(LoginRequiredMixin, ListView):
     model = Note
     context_object_name = "notes"
     template_name = "notes/note_list.html"
-    login_url = "/admin"
+    login_url = "/login"
 
     def get_queryset(self):
         return Note.objects.filter(Q(user=self.request.user) | Q(is_public=True))
@@ -69,7 +69,7 @@ def like(request, pk: int):
         note = get_object_or_404(Note, pk=pk, user=request.user)
         note.likes += 1
         note.save()
-    return HttpResponseRedirect(reverse("note.detail", args=(pk,)))
+        return HttpResponseRedirect(reverse("note.detail", args=(pk,)))
     raise Http404
 
 
@@ -79,5 +79,5 @@ def change_visibility(request, pk: int):
         note = get_object_or_404(Note, pk=pk, user=request.user)
         note.is_public = not note.is_public
         note.save()
-    return HttpResponseRedirect(reverse("note.detail", args=(pk,)))
+        return HttpResponseRedirect(reverse("note.detail", args=(pk,)))
     raise Http404
