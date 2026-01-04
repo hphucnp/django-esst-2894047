@@ -57,10 +57,20 @@ class PopularNoteListView(ListView):
         )
 
 
-class NoteDetailView(DetailView):
+class NoteDetailView(LoginRequiredMixin, DetailView):
     model = Note
     context_object_name = "note"
     template_name = "notes/note_detail.html"
+    login_url = "/login"
+
+
+class PublicNoteDetailView(DetailView):
+    context_object_name = "note"
+    template_name = "notes/note_detail.html"
+
+    def get_object(self):
+        pk = self.kwargs.get("pk")
+        return get_object_or_404(Note.objects.filter(is_public=True, pk=pk))
 
 
 @login_required
