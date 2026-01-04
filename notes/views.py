@@ -1,6 +1,8 @@
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.db.models import F
+from django.db.models import Q
 from django.http import Http404, HttpResponseRedirect
+from django.shortcuts import get_object_or_404
 from django.urls import reverse
 from django.views.generic import CreateView, DetailView, ListView, UpdateView
 from django.views.generic.edit import DeleteView
@@ -42,7 +44,7 @@ class NoteListView(LoginRequiredMixin, ListView):
     login_url = "/admin"
 
     def get_queryset(self):
-        return self.request.user.notes.all()
+        return Note.objects.filter(Q(user=self.request.user) | Q(is_public=True))
 
 
 class PopularNoteListView(ListView):
@@ -50,7 +52,9 @@ class PopularNoteListView(ListView):
     template_name = "notes/popular_note_list.html"
 
     def get_queryset(self):
-        return Note.objects.filter(likes__gt=1)
+        return Note.objects.filter(
+            Q(user=self.request.user) | Q(is_public=True), likes__gt=1
+        )
 
 
 class NoteDetailView(DetailView):
@@ -59,9 +63,21 @@ class NoteDetailView(DetailView):
     template_name = "notes/note_detail.html"
 
 
+@login_required
 def like(request, pk: int):
-    # note = get_object_or_404(Note, pk=pk)
     if request.method == "POST":
-        Note.objects.filter(pk=pk).update(likes=F("likes") + 1)
+        note = get_object_or_404(Note, pk=pk, user=request.user)
+        note.likes += 1
+        note.save()
+        return HttpResponseRedirect(reverse("note.detail", args=(pk,)))
+    raise Http404
+
+
+@login_required
+def make_public(request, pk: int):
+    if request.method == "POST":
+        note = get_object_or_404(Note, pk=pk, user=request.user)
+        note.is_public = True
+        note.save()
         return HttpResponseRedirect(reverse("note.detail", args=(pk,)))
     raise Http404
