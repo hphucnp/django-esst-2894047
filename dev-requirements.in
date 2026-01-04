@@ -7,6 +7,10 @@ pip-tools
 # Django development tools
 django-extensions
 
+# Type checking
+django-stubs
+mypy
+
 # Testing
 pytest
 pytest-django
