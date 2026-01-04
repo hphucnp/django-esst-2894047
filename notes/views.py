@@ -22,10 +22,17 @@ class NoteUpdateView(UpdateView):
     form_class = NoteForm
 
 
-class NoteCreateView(CreateView):
+class NoteCreateView(LoginRequiredMixin, CreateView):
     model = Note
     success_url = "/smart/notes"
     form_class = NoteForm
+    login_url = "/admin"
+
+    def form_valid(self, form):
+        self.object = form.save(commit=False)
+        self.object.user = self.request.user
+        self.object.save()
+        return HttpResponseRedirect(self.get_success_url())
 
 
 class NoteListView(LoginRequiredMixin, ListView):
@@ -35,8 +42,7 @@ class NoteListView(LoginRequiredMixin, ListView):
     login_url = "/admin"
 
     def get_queryset(self):
-        # Using Note.objects.filter to avoid Pylance type errors with reverse relationships
-        return Note.objects.filter(user=self.request.user)
+        return self.request.user.notes.all()
 
 
 class PopularNoteListView(ListView):
