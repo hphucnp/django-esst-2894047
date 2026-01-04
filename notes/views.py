@@ -69,15 +69,15 @@ def like(request, pk: int):
         note = get_object_or_404(Note, pk=pk, user=request.user)
         note.likes += 1
         note.save()
-        return HttpResponseRedirect(reverse("note.detail", args=(pk,)))
+    return HttpResponseRedirect(reverse("note.detail", args=(pk,)))
     raise Http404
 
 
 @login_required
-def make_public(request, pk: int):
+def change_visibility(request, pk: int):
     if request.method == "POST":
         note = get_object_or_404(Note, pk=pk, user=request.user)
-        note.is_public = True
+        note.is_public = not note.is_public
         note.save()
-        return HttpResponseRedirect(reverse("note.detail", args=(pk,)))
+    return HttpResponseRedirect(reverse("note.detail", args=(pk,)))
     raise Http404
